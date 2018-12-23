@@ -3,10 +3,11 @@ project(LabTrac)
 
 set(CMAKE_CXX_FLAGS "-g -Wall")
 
-add_executable(labTrac 
-                ioHandiling.cpp
-                projectPartB.cpp
-                Computer.cpp
-                Lab.cpp
-              )
+add_executable(labTrac
+    Computer.cpp
+    ioHandiling.cpp
+    Lab.cpp
+    Menu.cpp
+    projectPartB.cpp
+)
 
