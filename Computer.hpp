@@ -13,11 +13,11 @@ class Computer
     
     //Pr - Takes in a LogFile object so a login can be written to labTrac_log.txt.
     //Po - Void function, Performs the login logic
-    void login(ioHandiling::LogFile& log);
+    void login(ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers);
 
     //Pr - Takes in everything that a computer object needs to be succssful.
     //Po - Overloaded form used for the recovery feature.
-    void login(int userID_, std::string studentName_, int timeUsed_, ioHandiling::LogFile& log);
+    void login(int userID_, std::string studentName_, int timeUsed_, ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers);
 
     //Pr - Takes in the logfile object for logging.
     //Po - Void function, performs the logout logic

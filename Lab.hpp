@@ -24,7 +24,7 @@ public:
 
     //Pr - Asks for the userID
     //Po - Void function, resets computer object within the linked list.
-    void simulateLogoff(int userID, ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers);
+    bool simulateLogoff(int userID, ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers);
 
     //Pr - Takes in a recovered string and a logfile object.
     //Po - Void function, parses the linked list 

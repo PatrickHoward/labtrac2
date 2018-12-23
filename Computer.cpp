@@ -15,7 +15,7 @@ Computer::Computer()
   labLoc = 0;
 }
 
-void Computer::login(ioHandiling::LogFile& file)
+void Computer::login(ioHandiling::LogFile& file, std::map<int, Computer*>& activeComputers)
 {
     if(isOccupied())
     {
@@ -34,13 +34,14 @@ void Computer::login(ioHandiling::LogFile& file)
     
     }while(timeUsed % 15 != 0);
 
-    std::cout << "| Assigned " << studentName << " to user# " << ioHandiling::formatUserID(userID) << ".\n"; 
+    std::cout << "| Assigned " << studentName << " to user# " << userID << ".\n"; 
 
+    activeComputers.insert(std::pair<int, Computer*>(userID, this));
     writeToLog('I', file);
 
 }
 
-void Computer::login(int userID_, std::string studentName_, int timeUsed_, ioHandiling::LogFile& file)
+void Computer::login(int userID_, std::string studentName_, int timeUsed_, ioHandiling::LogFile& file, std::map<int, Computer*>& activeComputers)
 {
     if(isOccupied())
     {
@@ -53,6 +54,7 @@ void Computer::login(int userID_, std::string studentName_, int timeUsed_, ioHan
 
     std::cout << "| Assigned " << studentName << " into seat " << seatLoc << " \n";
 
+    activeComputers.insert(std::pair<int, Computer*>(userID, this));
     writeToLog('I', file);
     
 }

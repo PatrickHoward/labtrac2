@@ -18,66 +18,59 @@ public:
     {
         size = 0;
 
-        head = nullptr;
-        tail = nullptr;
+        head = NULL;
+        tail = NULL;
     }
 
-    Computer* appendNode(Computer addThis, int seatLoc, int labLoc)
+    void appendNode(Computer addThis, int seatLoc, int labLoc)
     {
         ++size;
 
         CompuNode* tempNode = new CompuNode;
         tempNode->data = addThis;
-        tempNode->next = nullptr;
+        tempNode->next = NULL;
 
-        if(head == nullptr)
+        if(head == NULL)
         {
             head = tempNode;
-        }
+            tail = tempNode; 
 
-        tail = tempNode;
+            tempNode = NULL;
+        }
+        else
+        {
+            tail->next = tempNode;
+            tail = tempNode;
+        }
 
         tail->data.assignSeatLocation(seatLoc);
         tail->data.assignLabLocation(labLoc);
 
-        return &(tail->data);
-
     }
 
-    void removeNode(Computer* deleteThis)
+    void removeNode(CompuNode* deleteThis)
     {
-        if(head == nullptr)
+        CompuNode* tempNode = head;
+        while(tempNode->next != deleteThis)
         {
-            return;
+            tempNode = tempNode->next;
+
+            if(tempNode == tail->next)
+            {
+                return;
+            }
+
         }
 
-        CompuNode* tempNode = findByPointer(deleteThis);
-
-        CompuNode* deleteNode = tempNode->next;
-        
-        if(tempNode == tail)
-        {
-            return;
-        }
-
-        tempNode->next = deleteNode->next;
-        
-
-        delete deleteNode;
-
-        --size;
+        tempNode->next = deleteThis->next;
+        delete deleteThis;
     }
 
-    CompuNode* findComputerBySeat(int seatLoc)
+    CompuNode* goToNComp(int n)
     {
         CompuNode* tmp = head;
 
-        if(tmp == nullptr)
-        {
-            return nullptr;
-        }
-
-        while(tmp->data.getSeatLoc() != seatLoc)
+        for (int i = 0; i < n-1; ++i)
         {
             tmp = tmp->next;
         }
@@ -85,44 +78,64 @@ public:
         return tmp;
     }
 
-    int nearestSeatAvailable(int largestSeatLoc_)
+    CompuNode* findComputerByID(int userID)
     {
-        CompuNode* temp = head;
-        int largestSeatLoc = largestSeatLoc_ ;
-
-        while(temp != tail)
+        CompuNode* tmp = head;
+        while(tmp->data.getID() != userID && tmp->next != NULL)
         {
-            if(temp->data.getSeatLoc() < largestSeatLoc)
-            {
-                largestSeatLoc = temp->data.getSeatLoc() - 1;
-            }
-            
-            temp = temp->next;
+            tmp = tmp->next;
+
         }
 
-        return largestSeatLoc;
+        return tmp;
+    }
+
+    void displayEach(CompuNode* current, int index)
+    {
+        if(current == nullptr)
+        {
+            std::cout << "| !! - No active computers in this lab - !!\n";
+            return;
+        }
+
+        if(current->next == nullptr)
+        {
+            return;
+        }
+
+        std::cout
+            << ioHandiling::formatUserID(current->data.getID())
+            << " - "
+            << current->data.getStudentName()
+            << ", ";
+        
+        if(index == 1)
+        {
+
+        }
+        else if(index % 5 == 0)
+        {
+            std::cout << "\n";
+        }
+
+        displayEach(current->next, index + 1);
 
     }
 
-    CompuNode* findByPointer(Computer* compPointer)
+    void reIndex(CompuNode* current, int index)
     {
-        if(head == nullptr)
+        if(current == nullptr)
         {
-            return nullptr;
+            std::cout << "| !! - No active computers in this lab - !!\n";
         }
 
-        CompuNode* finder = head;
-        while(finder->data.getID() != compPointer->getID())
+        if(current->next == nullptr)
         {
-            if(finder == tail && compPointer->getID() != tail->data.getID())
-            {
-                return nullptr;
-            }
-
-            finder = finder->next;
+            return;
         }
 
-        return finder;
+        current->data.assignSeatLocation(index);
+        reIndex(current->next, index + 1);
     }
 
 	~LinkedList()

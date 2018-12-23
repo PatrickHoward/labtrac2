@@ -86,7 +86,7 @@ void ioHandiling::LogFile::writeLine(const std::string& line)
         outputFile.open(fileName, ios::app);
     }
 
-    outputFile << line << "\n";
+    outputFile << line << endl;
     
     outputFile.close();
 }

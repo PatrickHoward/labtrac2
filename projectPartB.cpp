@@ -52,7 +52,7 @@ struct Menu
     void printMenu();
 
     //Pr - A logfile object is needed
-    //Po - Writes a timestamp to the log, this method is used only for testing purposes
+    //Po - Writes a timestamp to the log, this function is used only for testing purposes
     void startupTimestamp(ioHandiling::LogFile& log); 
 
     //Pr - Nothing
@@ -226,39 +226,28 @@ int Menu::promptUserId()
 
 int Menu::promptUniversitySelection()
 {
-    return ioHandiling::promptInt("Please select a lab.", 1, NUMLABS) - 1;
+    return ioHandiling::promptInt("Please select a lab.", 1, NUMLABS);
 }
 
 void Menu::simulateLogin(Lab labArray[], ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers)
 {
     int uniSelection = promptUniversitySelection();
-    std::cout << "| Selected " << UNIVERSITYNAMES[uniSelection] << "\n";
+    std::cout << "| Selected " << UNIVERSITYNAMES[uniSelection - 1] << "\n";
     labArray[uniSelection].simulateLogin(log, activeComputers);
 
 
 }
 
-//============================================ EXCEPTION HANDLED
 void Menu::simulateLogoff(Lab labArray[], ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers)
 {
     int userID = promptUserId();
+    bool loggedOutAUser = false;
     
-    try
+    for(int i = 0; i < NUMLABS; i++)
     {
-        Computer* selectedComp = activeComputers.find(userID)->second;
-        if(selectedComp != nullptr)
-        {
-            labArray[selectedComp->getLabLoc()].simulateLogoff(userID, log, activeComputers);
-        }
-
+        loggedOutAUser = labArray[i].simulateLogoff(userID, log, activeComputers);
     }
-    catch(std::bad_alloc e1)
-    {
-
-        std::cout << " !! - Unable to locate userID " << ioHandiling::formatUserID(userID) << " - !!\n|\n";  
-
-    }
-
+    
     
 }
 
@@ -276,7 +265,7 @@ void Menu::searchLab(std::map<int, Computer*>& activeComputers)
         }
 
 
-        auto selectedComp = activeComputers.find(userID)->second;
+        Computer* selectedComp = activeComputers.find(userID)->second;
 
         if(selectedComp != nullptr)
         {
@@ -295,7 +284,7 @@ void Menu::searchLab(std::map<int, Computer*>& activeComputers)
     catch(std::bad_alloc e1)
     {
 
-        std::cout << " !! - Unable to locate userID " << ioHandiling::formatUserID(userID) << " - !!\n|\n";  
+        std::cout << " !! - Unable to locate userID " << ioHandiling::formatUserID(userID) << " - !!\n";  
 
     }
 
@@ -307,13 +296,13 @@ void Menu::searchLab(std::map<int, Computer*>& activeComputers)
 void Menu::displayLab(Lab labArray[])
 { 
     int uniSelection = promptUniversitySelection();
-    labArray[uniSelection].displayLab();
+    labArray[uniSelection - 1].displayLab();
 }
 
 void Menu::recoverUser(Lab labArray[], ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers)
 {
-    
     int userID = promptUserId();
+    int uniSelection = promptUniversitySelection();
 
     int recoveredID = -1;
     std::string currentLine;
@@ -334,13 +323,7 @@ void Menu::recoverUser(Lab labArray[], ioHandiling::LogFile& log, std::map<int, 
 
     if (recoveredID == userID)
     {
-        std::cout << "| Found user ID " << ioHandiling::formatUserID(userID) << " in logfile.\n" ;
-
-        int uniSelection = promptUniversitySelection();
-        labArray[uniSelection].assignToFirstAvailable(currentLine, log, activeComputers);
-
-        return;
+        
+        labArray[uniSelection - 1].assignToFirstAvailable(currentLine, log, activeComputers);
     }
-    
-    std::cout << "| !! - Could not find " << ioHandiling::formatUserID(userID) << " in logfile. - !!\n";
 }
