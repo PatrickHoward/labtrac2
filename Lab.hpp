@@ -7,7 +7,6 @@
 #include "ioHandiling.hpp"
 #include "LinkedList.hpp"
 
-
 class Lab
 {
 public:
@@ -53,6 +52,11 @@ public:
     //Pr - Lab needs to have been constructued using the default constructor.
     //Po - Void function, adds labSize nodes to compuLab and initializes labOccupancy to 0.
     void fillWithCompuNodes();
+
+    std::string getUniversityName()
+    {
+        return labName;
+    }
 
 private:
 

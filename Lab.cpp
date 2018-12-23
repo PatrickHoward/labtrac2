@@ -21,7 +21,6 @@ Lab::Lab(int labSize_, std::string labName_)
 
 void Lab::simulateLogin(ioHandiling::LogFile& log, std::map<int, Computer*>& activeComputers)
 {
-
     if(isFull())
     {
         return;
